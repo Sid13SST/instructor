@@ -64,6 +64,7 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - OpenAI-compatible and Cohere JSON modes join text blocks while ignoring reasoning blocks. Responses API token counts contribute to retry totals, and fenced JSON validates through the compatibility parser.
 - Reserved TypedDict keys survive schema and cache round trips. Collection response types and Iterable scalar items return native values. Response-schema wrappers are reused without keeping dynamic input models alive.
 - Update provider SDKs and developer tooling, with Python 3.9-compatible core and example pins and separate OpenAI 2.x and 3.x installation coverage.
+- **Distil**: Logged prompts quote positional string arguments the same way as keyword arguments, so `f("1")` and `f(1)` are no longer rendered identically.
 
 ### Changed
 

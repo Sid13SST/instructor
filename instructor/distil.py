@@ -85,6 +85,15 @@ def format_function(func: Callable[..., Any]) -> str:
     return f"{definition}\n{formatted_docstring}\n{body}"
 
 
+def _format_positional_arg(value: Any) -> str:
+    """Render a positional argument like keyword arguments, so strings keep quotes."""
+    try:
+        return json.dumps(value)
+    except (TypeError, ValueError):
+        # Keep the previous str() rendering for values JSON cannot encode.
+        return str(value)
+
+
 def _get_return_type(func: Callable[..., Any]) -> Any:
     return_type = inspect.signature(func).return_annotation
     if isinstance(return_type, str):
@@ -307,7 +316,7 @@ class Instructions:
         else:
             func_def = get_signature_from_fn(fn)
 
-        str_args = ", ".join(map(str, args))
+        str_args = ", ".join(_format_positional_arg(arg) for arg in args)
         str_kwargs = (
             ", ".join(f"{k}={json.dumps(v)}" for k, v in kwargs.items()) or None
         )

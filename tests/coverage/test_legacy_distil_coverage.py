@@ -212,6 +212,22 @@ def test_distil_dispatch_sends_model_schema_and_never_calls_original(
     assert call["messages"][1]["content"] == "Return `fetch(12, active=false)`"
 
 
+def test_distil_quotes_positional_string_arguments() -> None:
+    instructions = Instructions(
+        name="coverage.distil.kwargs",
+        openai_client=cast(OpenAI, RecordingClient()),
+    )
+    text = instructions.openai_kwargs(
+        "lookup", lookup_user, ("1", "eu"), {}, UserRecord
+    )
+    number = instructions.openai_kwargs(
+        "lookup", lookup_user, (1, "eu"), {}, UserRecord
+    )
+
+    assert text["messages"][1]["content"] == 'Return `lookup("1", "eu")`'
+    assert number["messages"][1]["content"] == 'Return `lookup(1, "eu")`'
+
+
 def test_distil_rejects_invalid_modes_and_return_models() -> None:
     instructions = Instructions(
         name="coverage.distil.invalid",
